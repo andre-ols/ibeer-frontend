@@ -56,7 +56,7 @@ export const BeerCard: FC<{
             </div>
           </div>
 
-          <span className="text-yellow-600 font-bold text-2xl">R$ 50,00</span>
+          <span className="text-amber-500 font-bold text-2xl">R$ 50,00</span>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ type Beer = {
 };
 
 export default async function Showcase() {
-  const response = await fetch("http://localhost:3333?limit=20");
+  const response = await fetch("http://localhost:3333/beer/?limit=20");
   const result = await response.json();
 
   return (
