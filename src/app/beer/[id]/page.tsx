@@ -1,48 +1,73 @@
+import { FC } from "react";
+import { AddToCartButton } from "./components/AddToCartButton";
 import { Carousel } from "./components/Carrossel";
+import { ShoppingCartProvider } from "./contexts/ShoppingCart";
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const response = await fetch(`http://localhost:3333/beer/${params.id}`);
+export default function Page({ params }: { params: { id: string } }) {
+  return (
+    <ShoppingCartProvider>
+      <DetailsBeer id={params.id} />
+    </ShoppingCartProvider>
+  );
+}
+
+export const DetailsBeer: FC<{
+  id: string;
+}> = async (props) => {
+  const response = await fetch(`http://localhost:3333/beer/${props.id}`);
   const result = await response.json();
 
   const data = result.data;
 
   return (
-    <main className="bg-gray-800 h-full  min-h-screen flex justify-center">
+    <main className="bg-gray-800 h-full  min-h-screen flex justify-center items-center">
       <div
         id="container"
-        className="max-w-[1500px] w-full flex items-center justify-center p-10 gap-5"
+        className="max-w-[1200px] w-full h-full max-h-[500px] flex items-center m-10 justify-center gap-5"
       >
-        <div className="carrousel">
-          <Carousel
-            images={[
-              "http://localhost:3333" + `/assets/${data.name}/image-1.jfif`,
-              "http://localhost:3333" + `/assets/${data.name}/image-2.jfif`,
-              "http://localhost:3333" + `/assets/${data.name}/image-3.jfif`,
-              "http://localhost:3333" + `/assets/${data.name}/image-4.jfif`,
-            ]}
-          />
+        <Carousel
+          images={[
+            "http://localhost:3333" + `/assets/${data.name}/image-1.jfif`,
+            "http://localhost:3333" + `/assets/${data.name}/image-2.jfif`,
+            "http://localhost:3333" + `/assets/${data.name}/image-3.jfif`,
+            "http://localhost:3333" + `/assets/${data.name}/image-4.jfif`,
+          ]}
+        />
+
+        <div className="h-[500px] bg-gray-900 rounded-3xl p-5 flex flex-col gap-2 justify-between">
+          <div className="flex flex-col justify-center rounded-lg items-center bg-gray-800 gap-2  p-3">
+            <span className="text-white font-bold text-xl">IBU</span>
+            <span className="text-white font-bold text-xl">{data.ibu}</span>
+          </div>
+
+          <div className="flex flex-col justify-center rounded-lg items-center bg-gray-800 gap-2  p-3">
+            <span className="text-white font-bold text-xl">ABV</span>
+            <span className="text-white font-bold text-xl">{data.abv}%</span>
+          </div>
+
+          <div className="flex flex-col justify-center rounded-lg items-center bg-gray-800 gap-2  p-3">
+            <span className="text-white font-bold text-xl">EBC</span>
+            <span className="text-white font-bold text-xl">{data.ebc}</span>
+          </div>
         </div>
 
-        <div
-          id="details"
-          className="h-full w-full max-w-[600px] flex flex-col items-center justify-center gap-5"
-        >
+        <div className="flex h-[500px] flex-col items-center justify-between w-full gap-5">
           <header className="flex justify-between items-center w-full px-2">
             <h1 className="text-2xl font-bold text-white">{data.name}</h1>
             <div className="rounded-sm flex items-center justify-center bg-amber-500 px-3 py-1 h-fit">
-              <span className="text-black font-bold text-xs">
+              <span className="text-white font-bold text-xs">
                 {data.category}
               </span>
             </div>
           </header>
-          <div className="bg-gray-900 rounded-3xl p-5 w-full">
+          <div className="bg-gray-900 rounded-3xl p-5 w-full h-full">
             <p className="text-white text-sm text-justify">
               {data.description}
             </p>
           </div>
 
-          <div className="flex gap-5 w-full justify-between">
-            <div className="bg-gray-900 rounded-3xl p-5 flex flex-col gap-2 w-full">
+          <div className="flex gap-5">
+            <div className="bg-gray-900 rounded-3xl p-5 flex flex-col gap-2 w-full h-full">
               <span className="text-white font-bold text-sm">
                 Comidas que armonizam:
               </span>
@@ -57,37 +82,19 @@ export default async function Page({ params }: { params: { id: string } }) {
               ))}
             </div>
 
-            <div className="bg-gray-900 rounded-3xl p-5 flex flex-col gap-2">
-              <span className="text-white font-bold text-sm">Indicadores:</span>
-              <div className="rounded-full flex items-center justify-center bg-gray-800 gap-2  px-3 py-1">
-                <span className="text-white font-bold text-xs">IBU</span>
-                <span className="text-white font-bold text-xs">{data.ibu}</span>
-              </div>
-
-              <div className="rounded-full flex items-center justify-center bg-gray-800 gap-2 px-3 py-1">
-                <span className="text-white font-bold text-xs">ABV</span>
-                <span className="text-white font-bold text-xs">
-                  {data.abv}%
-                </span>
-              </div>
-
-              <div className="rounded-full flex items-center justify-center bg-gray-800 gap-2 px-3 py-1">
-                <span className="text-white font-bold text-xs">EBC</span>
-                <span className="text-white font-bold text-xs">{data.ebc}</span>
-              </div>
+            <div className="bg-gray-900 rounded-3xl p-5 w-full h-full">
+              <span className="text-white font-bold text-sm">
+                Dicas dos mestres cervejeiros:
+              </span>
+              <p className="text-white text-sm text-justify">
+                {data.brewersTips}
+              </p>
             </div>
           </div>
 
-          <div className="bg-gray-900 rounded-3xl p-5 w-full">
-            <span className="text-white font-bold text-sm">
-              Dicas dos mestres cervejeiros:
-            </span>
-            <p className="text-white text-sm text-justify">
-              {data.brewersTips}
-            </p>
-          </div>
+          <AddToCartButton beer={data} />
         </div>
       </div>
     </main>
   );
-}
+};

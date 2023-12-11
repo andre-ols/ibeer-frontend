@@ -2,21 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BeerCard } from "./components/BeerCard";
 
-type Beer = {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  abv: number;
-  ibu: number;
-  ebc: number;
-  category: string;
-  foodPairing: string[];
-  brewersTips: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export default async function Showcase() {
   const response = await fetch("http://localhost:3333/beer/?limit=20");
   const result = await response.json();
