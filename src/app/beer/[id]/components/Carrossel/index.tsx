@@ -22,7 +22,12 @@ export const Carousel: FC<CarouselProps> = ({ images }) => {
   };
 
   return (
-    <div className="relative w-[500px] h-[500px] rounded-3xl overflow-hidden">
+    <div
+      className="relative max-w-[500px] h-[500px] rounded-3xl overflow-hidden"
+      style={{
+        width: "-webkit-fill-available",
+      }}
+    >
       {images.map((image, index) => (
         <Image
           key={index}
