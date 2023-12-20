@@ -1,3 +1,5 @@
+import { GridArea } from "@/components/GridArea";
+import { Header } from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,8 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>
-        <main>{children}</main>
+      <body className="layout">
+        <GridArea areaName="header">
+          <Header />
+        </GridArea>
+        <GridArea areaName="main">
+          <main className="h-full">{children}</main>
+        </GridArea>
         <Toaster />
       </body>
     </html>

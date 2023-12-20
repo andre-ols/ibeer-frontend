@@ -78,4 +78,14 @@
 
 body {
     -webkit-font-smoothing: antialiased;
+    height: 100vh;
+}
+
+.layout {
+    display: grid;
+    grid-template-areas:
+        'header header'
+        'main main';
+
+    grid-template-rows: 4rem 1fr;
 }
