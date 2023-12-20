@@ -7,7 +7,7 @@ export default async function Showcase() {
   const result = await response.json();
 
   return (
-    <main className="bg-gray-800 h-full  min-h-screen flex justify-center">
+    <div className="bg-gray-800 h-full  min-h-screen flex justify-center">
       <div
         id="container"
         className="max-w-[1500px] flex flex-col items-center justify-center gap-24 p-10"
@@ -25,6 +25,6 @@ export default async function Showcase() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

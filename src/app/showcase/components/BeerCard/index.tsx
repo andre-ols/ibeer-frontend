@@ -32,6 +32,7 @@ export const BeerCard: FC<{
           width={250}
           height={250}
           priority
+          quality={100}
           className="absolute inset-y-0"
         />
         <div className="flex flex-col justify-end items-center w-full h-full p-3 pb-5">

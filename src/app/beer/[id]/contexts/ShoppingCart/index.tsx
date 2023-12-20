@@ -1,5 +1,7 @@
 "use client";
 
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 import {
   FC,
   PropsWithChildren,
@@ -25,6 +27,9 @@ export const shoppingCartContext = createContext<ShoppingCartContext>(
 
 export const ShoppingCartProvider: FC<PropsWithChildren> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const { toast } = useToast();
+
+  const { push } = useRouter();
 
   const addProduct = (product: Product) => {
     const productAlreadyExists = products.find(
@@ -37,6 +42,13 @@ export const ShoppingCartProvider: FC<PropsWithChildren> = ({ children }) => {
     } else {
       setProducts([...products, product]);
     }
+
+    toast({
+      title: "Produto adicionado com sucesso!",
+      description: "Vá até o carrinho para finalizar a compra",
+    });
+
+    push("/showcase");
   };
 
   const removeProduct = (product: Product) => {

@@ -20,10 +20,10 @@ export const DetailsBeer: FC<{
   const data = result.data as Beer;
 
   return (
-    <main className="bg-gray-800 h-full  min-h-screen flex justify-center items-center overflow-auto">
+    <div className="bg-gray-800 h-full  min-h-screen flex justify-center items-center overflow-auto">
       <div
         id="container"
-        className="max-w-[1300px] w-full h-full xl:max-h-[500px] flex md:flex-row flex-col flex-wrap items-center p-5 justify-center gap-5"
+        className="max-w-[1300px] w-full h-full xl:max-h-[540px] flex md:flex-row flex-col flex-wrap items-center p-5 justify-center gap-5"
       >
         <Carousel
           images={[
@@ -95,6 +95,6 @@ export const DetailsBeer: FC<{
           <AddToCartButton beer={data} />
         </div>
       </div>
-    </main>
+    </div>
   );
 };
