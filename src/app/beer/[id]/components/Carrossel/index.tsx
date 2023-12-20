@@ -8,7 +8,6 @@ type CarouselProps = {
 };
 
 export const Carousel: FC<CarouselProps> = ({ images }) => {
-  console.log(images);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToNext = () => {

@@ -1,15 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
 import { FC } from "react";
 
 export const BeerCard: FC<{
-  imageUri: string;
-  title: string;
-  ibu: number;
-  abv: number;
-  ebc: number;
-}> = ({ imageUri, title, ibu, abv, ebc }) => {
+  beer: Beer;
+}> = ({ beer: { imageUrl, name, ibu, abv, ebc, id, price } }) => {
   return (
-    <div
+    <Link
+      href={`/beer/${id}`}
       id="beer-card"
       className="h-[420px] w-[250px] flex items-end justify-end rounded-3xl relative overflow-hidden hover:cursor-pointer"
     >
@@ -29,15 +27,15 @@ export const BeerCard: FC<{
         className={`h-[280px] w-full bg-gray-900 flex flex-col items-end z-10`}
       >
         <Image
-          src={imageUri}
-          alt={`Beer: ${title}`}
+          src={imageUrl}
+          alt={`Beer: ${name}`}
           width={250}
           height={250}
           priority
           className="absolute inset-y-0"
         />
         <div className="flex flex-col justify-end items-center w-full h-full p-3 pb-5">
-          <h1 className="text-lg font-bold text-white text-center">{title}</h1>
+          <h1 className="text-lg font-bold text-white text-center">{name}</h1>
 
           <div className="flex gap-2 text-white py-3">
             <div className="rounded-full flex items-center justify-center bg-slate-800 gap-2  px-3 py-1">
@@ -47,7 +45,7 @@ export const BeerCard: FC<{
 
             <div className="rounded-full flex items-center justify-center bg-slate-800 gap-2 px-3 py-1">
               <span className="text-white font-bold text-xs">ABV</span>
-              <span className="text-white font-bold text-xs">{abv}</span>
+              <span className="text-white font-bold text-xs">{abv}%</span>
             </div>
 
             <div className="rounded-full flex items-center justify-center bg-slate-800 gap-2 px-3 py-1">
@@ -56,9 +54,17 @@ export const BeerCard: FC<{
             </div>
           </div>
 
-          <span className="text-amber-500 font-bold text-2xl">R$ 50,00</span>
+          <span className="text-amber-500 font-bold text-2xl">
+            {
+              // format to BRL
+              new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              }).format(price)
+            }
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

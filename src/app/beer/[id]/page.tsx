@@ -17,7 +17,7 @@ export const DetailsBeer: FC<{
   const response = await fetch(`http://localhost:3333/beer/${props.id}`);
   const result = await response.json();
 
-  const data = result.data;
+  const data = result.data as Beer;
 
   return (
     <main className="bg-gray-800 h-full  min-h-screen flex justify-center items-center overflow-auto">
@@ -56,7 +56,7 @@ export const DetailsBeer: FC<{
             <h1 className="text-2xl font-bold text-white">{data.name}</h1>
             <div className="rounded-sm flex items-center justify-center bg-amber-500 px-3 py-1 h-fit">
               <span className="text-white font-bold text-xs">
-                {data.category}
+                {data.category.name}
               </span>
             </div>
           </header>

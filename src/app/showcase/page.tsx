@@ -21,14 +21,7 @@ export default async function Showcase() {
           className="flex gap-5 h-full items-center justify-center flex-wrap"
         >
           {result.data.map((beer: Beer) => (
-            <BeerCard
-              key={beer.id}
-              imageUri={"http://localhost:3333" + beer.imageUrl}
-              title={beer.name}
-              ibu={beer.ibu}
-              abv={beer.abv}
-              ebc={beer.ebc}
-            />
+            <BeerCard beer={beer} key={beer.id} />
           ))}
         </div>
       </div>
