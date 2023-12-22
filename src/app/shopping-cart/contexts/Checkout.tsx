@@ -2,7 +2,7 @@
 import { FC, PropsWithChildren, createContext, useState } from "react";
 
 type Step = {
-  label: string;
+  label: "Detalhes" | "Pagamento" | "Confirmação";
   isActive: boolean;
   isDisabled: boolean;
 };
@@ -16,7 +16,7 @@ export type PaymentInfo = {
 
 type CheckoutContext = {
   steps: Step[];
-  setSteps: (steps: Step[]) => void;
+  goToStep: (step: Step["label"]) => void;
   paymentStepIsActive: boolean | undefined;
   detailsStepIsActive: boolean | undefined;
   paymentInfo: PaymentInfo;
@@ -28,7 +28,7 @@ export const checkoutContext = createContext<CheckoutContext>(
 );
 
 export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [steps, setSteps] = useState([
+  const [steps, setSteps] = useState<Step[]>([
     {
       label: "Detalhes",
       isActive: true,
@@ -37,7 +37,7 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
     {
       label: "Pagamento",
       isActive: false,
-      isDisabled: false,
+      isDisabled: true,
     },
     {
       label: "Confirmação",
@@ -64,13 +64,17 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
   const setPaymentInfoHandler = (paymentInfo: PaymentInfo) => {
     setPaymentInfo(paymentInfo);
     const confirmStep = steps.find((step) => step.label === "Confirmação");
-    steps.map((step) => (step.isActive = false));
+    goToStep(confirmStep!.label);
+  };
 
-    if (confirmStep) {
-      confirmStep.isDisabled = false;
-      confirmStep.isActive = true;
-    }
-
+  const goToStep = (label: Step["label"]) => {
+    steps.map((step) => ((step.isActive = false), (step.isDisabled = true)));
+    const stepIndex = steps.findIndex((s) => s.label === label);
+    steps[stepIndex] = {
+      ...steps[stepIndex],
+      isActive: true,
+      isDisabled: false,
+    };
     setSteps([...steps]);
   };
 
@@ -78,7 +82,7 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
     <checkoutContext.Provider
       value={{
         steps,
-        setSteps,
+        goToStep,
         paymentStepIsActive,
         detailsStepIsActive,
         paymentInfo,

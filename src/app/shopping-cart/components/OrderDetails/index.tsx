@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { shoppingCartContext } from "@/contexts/ShoppingCart";
 import { FC, useContext } from "react";
+import { checkoutContext } from "../../contexts/Checkout";
 
 export const OrderDetails: FC = () => {
   const { products, price } = useContext(shoppingCartContext);
+  const { goToStep } = useContext(checkoutContext);
   return (
     <div className="flex flex-col w-full justify-center items-center gap-5 p-2">
       <div className="flex flex-col w-full gap-2 p-2 max-h-[350px] overflow-auto">
@@ -36,7 +38,11 @@ export const OrderDetails: FC = () => {
         }
       </span>
 
-      <Button variant="ghost" className="bg-amber-500 w-full">
+      <Button
+        variant="ghost"
+        className="bg-amber-500 w-full"
+        onClick={() => goToStep("Pagamento")}
+      >
         Realizar pagamento
       </Button>
     </div>
