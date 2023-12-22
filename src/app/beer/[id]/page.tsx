@@ -1,7 +1,7 @@
 import { FC } from "react";
+import { ShoppingCartProvider } from "../../../contexts/ShoppingCart";
 import { AddToCartButton } from "./components/AddToCartButton";
 import { Carousel } from "./components/Carrossel";
-import { ShoppingCartProvider } from "./contexts/ShoppingCart";
 
 export default function Page({ params }: { params: { id: string } }) {
   return (
