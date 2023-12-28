@@ -2,7 +2,7 @@
 import { FC, PropsWithChildren, createContext, useState } from "react";
 
 type Step = {
-  label: "Detalhes" | "Pagamento" | "Confirmação";
+  label: "Detalhes" | "Pagamento";
   isActive: boolean;
   isDisabled: boolean;
 };
@@ -19,8 +19,7 @@ type CheckoutContext = {
   goToStep: (step: Step["label"]) => void;
   paymentStepIsActive: boolean | undefined;
   detailsStepIsActive: boolean | undefined;
-  paymentInfo: PaymentInfo;
-  setPaymentInfoHandler: (paymentInfo: PaymentInfo) => void;
+  checkout: (paymentInfo: PaymentInfo) => void;
 };
 
 export const checkoutContext = createContext<CheckoutContext>(
@@ -39,11 +38,6 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
       isActive: false,
       isDisabled: true,
     },
-    {
-      label: "Confirmação",
-      isActive: false,
-      isDisabled: true,
-    },
   ]);
 
   const paymentStepIsActive = steps.find(
@@ -54,18 +48,7 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
     (step) => step.label === "Detalhes"
   )?.isActive;
 
-  const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
-    number: "",
-    name: "",
-    date: "",
-    cvc: "",
-  });
-
-  const setPaymentInfoHandler = (paymentInfo: PaymentInfo) => {
-    setPaymentInfo(paymentInfo);
-    const confirmStep = steps.find((step) => step.label === "Confirmação");
-    goToStep(confirmStep!.label);
-  };
+  const checkout = async (paymentInfo: PaymentInfo) => {};
 
   const goToStep = (label: Step["label"]) => {
     steps.map((step) => ((step.isActive = false), (step.isDisabled = true)));
@@ -85,8 +68,7 @@ export const CheckoutProvider: FC<PropsWithChildren> = ({ children }) => {
         goToStep,
         paymentStepIsActive,
         detailsStepIsActive,
-        paymentInfo,
-        setPaymentInfoHandler,
+        checkout,
       }}
     >
       {children}

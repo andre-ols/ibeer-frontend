@@ -86,6 +86,7 @@ export type ShoppingCartContext = {
   products: Product[];
   addProduct: (product: Product) => void;
   removeProduct: (product: Product) => void;
+  clearCart: () => void;
   price: number;
 };
 
@@ -119,6 +120,11 @@ export const ShoppingCartProvider: FC<PropsWithChildren> = ({ children }) => {
     setProducts(order.getProducts());
   };
 
+  const clearCart = () => {
+    localStorage.removeItem("products");
+    setProducts([]);
+  };
+
   useEffect(() => {
     setProducts(order.getProducts());
   }, []);
@@ -130,6 +136,7 @@ export const ShoppingCartProvider: FC<PropsWithChildren> = ({ children }) => {
         addProduct,
         removeProduct,
         price: order.getPrice(),
+        clearCart,
       }}
     >
       {children}

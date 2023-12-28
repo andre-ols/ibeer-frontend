@@ -9,8 +9,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { shoppingCartContext } from "@/contexts/ShoppingCart";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import Cards, { Focused } from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
@@ -29,19 +32,65 @@ const schema = z.object({
 });
 
 export const Payment: FC = () => {
-  const { paymentInfo, setPaymentInfoHandler, goToStep } =
-    useContext(checkoutContext);
+  const { goToStep } = useContext(checkoutContext);
+  const { products, clearCart } = useContext(shoppingCartContext);
+
+  const { toast } = useToast();
+
+  const { push } = useRouter();
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: paymentInfo,
+    defaultValues: {
+      number: "",
+      name: "",
+      date: "",
+      cvc: "",
+    },
   });
 
   const [focus, setFocus] = useState<Focused>("number");
 
-  function onSubmit(values: z.infer<typeof schema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    setPaymentInfoHandler(values);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function onSubmit(values: z.infer<typeof schema>) {
+    setIsLoading(true);
+    try {
+      await fetch("http://localhost:3333/checkout", {
+        method: "POST",
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+        body: JSON.stringify({
+          beers: products.map((product) => ({
+            id: product.beer.id,
+            quantity: product.quantity,
+          })),
+          payment: {
+            cardNumber: values.number,
+            holderName: values.name,
+            expirationDate: values.date,
+            cvv: values.cvc,
+          },
+        }),
+      });
+
+      toast({
+        title: "Pedido realizado com sucesso!",
+        description: "Obrigado pela preferência",
+      });
+
+      clearCart();
+
+      push("/showcase");
+    } catch (error) {
+      console.log(error);
+
+      toast({
+        title: "Erro ao realizar o pedido",
+        description: "Tente novamente mais tarde",
+        variant: "destructive",
+      });
+    }
+    setIsLoading(false);
   }
 
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -194,8 +243,10 @@ export const Payment: FC = () => {
               variant="ghost"
               className="bg-amber-500"
               type="submit"
+              disabled={isLoading}
             >
-              Revisar pedido
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Finalizar pedido
             </Button>
           </div>
         </form>
